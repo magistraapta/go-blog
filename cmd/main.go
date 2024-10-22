@@ -1,19 +1,20 @@
 package main
 
 import (
-	"golang-templ/views"
+	"fmt"
+	"golang-templ/cmd/database"
+	"log"
 	"net/http"
-
-	"github.com/a-h/templ"
 )
 
 func main() {
-	component := views.Hello("john")
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		templ.Handler(component).ServeHTTP(w, r)
-	})
 
+	if err := database.InitDB(); err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Success connect to DB")
 	// Added error handling for ListenAndServe
+	fmt.Print("Running server on port 8000")
 	if err := http.ListenAndServe(":8000", nil); err != nil {
 		// Log the error and exit
 		panic(err)
